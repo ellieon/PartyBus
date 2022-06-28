@@ -21,11 +21,7 @@ MPU6050 mpu;
 SoftwareSerial mySerial(10, 11);
 
 void setup () {
-  pinMode(RED_PIN, OUTPUT);
-  pinMode(GREEN_PIN, OUTPUT);
-  pinMode(BLUE_PIN, OUTPUT);
-  setRGB(ANALOG_MAX, 0, 0); 
-  mySerial.begin (9600);
+  initialiseLED();
   initialiseDFPlayer();
   setupIMU();
   setRGB(0,0,0);
@@ -85,7 +81,6 @@ void startSong()
 void pauseSong()
 {
   execute_CMD(0x0E,0,0);
-  //delay(SERIAL_WAIT);
   isPlaying = false;
 }
 
@@ -129,6 +124,9 @@ void execute_CMD(byte CMD, byte Par1, byte Par2)
   }
 }
 
+//--------------------------------
+//Initialisation functions
+//--------------------------------
 void setupIMU() {
   Serial.begin(115200);
   Serial.println("Initialize MPU6050");
@@ -147,8 +145,15 @@ void setupIMU() {
   mpu.setMotionDetectionDuration(MOTION_DETECTION_DURATION);
 }
 
+void initialiseLED() {
+  pinMode(RED_PIN, OUTPUT);
+  pinMode(GREEN_PIN, OUTPUT);
+  pinMode(BLUE_PIN, OUTPUT);
+  setRGB(ANALOG_MAX, 0, 0); 
+}
 
 void initialiseDFPlayer() {
+  mySerial.begin (9600);
   execute_CMD(0x3F, 0, 0);
   delay(SERIAL_WAIT);
   setVolume(20);
